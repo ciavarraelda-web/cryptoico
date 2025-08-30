@@ -10,7 +10,8 @@ export default function Header() {
         
         {/* LOGO */}
         <Link href="/" className="flex items-center">
-          <img
+          <img src="/logo.png" alt="CryptoICO Logo" className="h-12 w-auto" />
+    
             src="/logo.png"     // metti il file logo nella cartella /public
             alt="CryptoICO Logo"
             className="h-12 w-auto" // altezza 48px, larghezza proporzionata
