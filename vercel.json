@@ -1,20 +1,8 @@
 {
   "env": {
-    {
-  "env": {
-    "MONGODB_URI": "mongodb+srv://username:password@cluster.mongodb.net/database",
+    "MONGODB_URI": "mongodb+srv://15031980:password@cluster1.d480khl.mongodb.net/cryptoico?retryWrites=true&w=majority&appName=Cluster1",
     "COINBASE_API_KEY": "b1f89b9f-562c-468d-b3fb-ccb1262e9eda",
     "COINBASE_WEBHOOK_SECRET": "c6426999-a750-4260-86fd-d193921543d8",
     "NEWS_API_KEY": "aa53ba1f151d42f5bac01774e792e9ee"
-  }
-}
-  },
-  "build": {
-    "env": {
-      "MONGODB_URI": "@mongodb_uri",
-      "COINBASE_API_KEY": "@coinbase_api_key",
-      "COINBASE_WEBHOOK_SECRET": "@coinbase_webhook_secret",
-      "NEWS_API_KEY": "@news_api_key"
-    }
   }
 }
