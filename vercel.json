@@ -1,0 +1,16 @@
+{
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "COINBASE_API_KEY": "@coinbase_api_key",
+    "COINBASE_WEBHOOK_SECRET": "@coinbase_webhook_secret",
+    "NEWS_API_KEY": "@news_api_key"
+  },
+  "build": {
+    "env": {
+      "MONGODB_URI": "@mongodb_uri",
+      "COINBASE_API_KEY": "@coinbase_api_key",
+      "COINBASE_WEBHOOK_SECRET": "@coinbase_webhook_secret",
+      "NEWS_API_KEY": "@news_api_key"
+    }
+  }
+}
