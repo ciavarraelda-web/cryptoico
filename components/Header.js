@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { useState } from "react";
-import Image from "next/image";
-import logo from "../public/logo.png"; // metti il tuo logo in /public/logo.png
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,12 +10,10 @@ export default function Header() {
         
         {/* LOGO */}
         <Link href="/" className="flex items-center">
-          <Image
-            src={logo}
+          <img
+            src="/logo.png"     // metti il file logo nella cartella /public
             alt="CryptoICO Logo"
-            width={160}
-            height={50}
-            priority
+            className="h-12 w-auto" // altezza 48px, larghezza proporzionata
           />
         </Link>
 
