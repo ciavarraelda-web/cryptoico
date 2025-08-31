@@ -16,38 +16,54 @@ export default function ModalICO({ formData, handleInputChange, handleSubmit, cl
       >
         <h2 className="text-xl font-bold mb-4">Submit New ICO - $299</h2>
         <form onSubmit={handleSubmit}>
-          <input
-            id="name"
-            placeholder="ICO Name"
-            required
-            className="w-full p-2 border rounded mb-2"
-            onChange={handleInputChange}
-            value={formData.name}
-          />
-          <input
-            id="website"
-            placeholder="Website URL"
-            required
-            className="w-full p-2 border rounded mb-2"
-            onChange={handleInputChange}
-            value={formData.website}
-          />
-          <input
-            id="email"
-            placeholder="Contact Email"
-            required
-            className="w-full p-2 border rounded mb-2"
-            onChange={handleInputChange}
-            value={formData.email}
-          />
-          <textarea
-            id="description"
-            placeholder="Description"
-            required
-            className="w-full p-2 border rounded mb-4"
-            onChange={handleInputChange}
-            value={formData.description}
-          ></textarea>
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-gray-700 mb-2">ICO Name *</label>
+            <input
+              type="text"
+              id="name"
+              required
+              className="w-full p-2 border border-gray-300 rounded"
+              value={formData.name}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="website" className="block text-gray-700 mb-2">Website URL *</label>
+            <input
+              type="url"
+              id="website"
+              required
+              className="w-full p-2 border border-gray-300 rounded"
+              value={formData.website}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-700 mb-2">Contact Email *</label>
+            <input
+              type="email"
+              id="email"
+              required
+              className="w-full p-2 border border-gray-300 rounded"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="description" className="block text-gray-700 mb-2">Description *</label>
+            <textarea
+              id="description"
+              rows="4"
+              required
+              className="w-full p-2 border border-gray-300 rounded"
+              value={formData.description}
+              onChange={handleInputChange}
+            ></textarea>
+          </div>
+
           <div className="flex justify-end gap-2">
             <button
               type="button"
@@ -58,7 +74,7 @@ export default function ModalICO({ formData, handleInputChange, handleSubmit, cl
             </button>
             <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
+              className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
             >
               Pay with Crypto
             </button>
