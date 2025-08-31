@@ -1,9 +1,11 @@
 import Head from "next/head"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
+import ICOList from "../components/ICOList"
+import clientPromise from "../lib/mongodb"
 import { useEffect, useState } from "react"
 
-export default function Home() {
+export default function Home({ icos, banners }) {
   const [news, setNews] = useState([])
 
   useEffect(() => {
@@ -29,11 +31,35 @@ export default function Home() {
       <Header />
 
       <main className="container mx-auto py-12 px-4">
+        {/* Welcome Section */}
         <section className="mb-12 text-center">
           <h1 className="text-4xl font-bold mb-4">Welcome to CryptoICO</h1>
-          <p className="text-gray-700 max-w-2xl mx-auto">Browse the latest ICOs and crypto news. Submit your ICO or advertise your project today!</p>
+          <p className="text-gray-700 max-w-2xl mx-auto">
+            Browse the latest ICOs and crypto news. Submit your ICO or advertise your project today!
+          </p>
         </section>
 
+        {/* ICO Recenti */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Recent ICOs</h2>
+          {icos.length === 0 ? (
+            <p className="text-gray-500">No ICOs available.</p>
+          ) : (
+            <ICOList data={icos} banners={[]} />
+          )}
+        </section>
+
+        {/* Banner Attivi */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Active Banners</h2>
+          {banners.length === 0 ? (
+            <p className="text-gray-500">No active banners.</p>
+          ) : (
+            <ICOList data={[]} banners={banners} />
+          )}
+        </section>
+
+        {/* News Crypto */}
         <section>
           <h2 className="text-2xl font-bold mb-6">Latest Crypto News</h2>
           {news.length === 0 ? (
@@ -60,4 +86,33 @@ export default function Home() {
       <Footer />
     </div>
   )
+}
+
+export async function getServerSideProps() {
+  try {
+    const client = await clientPromise
+    const db = client.db("cryptoico")
+
+    const icos = await db.collection("icos")
+      .find({ approved: true })
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .toArray()
+
+    const banners = await db.collection("banners")
+      .find({ approved: true, endDate: { $gt: new Date() } })
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .toArray()
+
+    return {
+      props: {
+        icos: JSON.parse(JSON.stringify(icos)),
+        banners: JSON.parse(JSON.stringify(banners))
+      }
+    }
+  } catch (err) {
+    console.error(err)
+    return { props: { icos: [], banners: [] } }
+  }
 }
