@@ -1,40 +1,60 @@
-import clientPromise from '../../lib/mongodb'
-import crypto from 'crypto'
+// pages/api/webhook.js
+import { MongoClient } from "mongodb"
+import crypto from "crypto"
 
-export const config = { api: { bodyParser: false } }
-
-async function getRawBody(req) {
-  return new Promise((resolve, reject) => {
-    let data = ''
-    req.on('data', chunk => (data += chunk))
-    req.on('end', () => resolve(data))
-    req.on('error', reject)
-  })
-}
+const client = new MongoClient(process.env.MONGODB_URI)
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" })
+
   try {
-    const rawBody = await getRawBody(req)
-    const signature = req.headers['x-cc-webhook-signature']
-    const digest = crypto.createHmac('sha256', process.env.COINBASE_WEBHOOK_SECRET).update(rawBody).digest('hex')
-    if (digest !== signature) return res.status(401).json({ error: 'Invalid signature' })
+    const signature = req.headers["x-cc-webhook-signature"]
+    const rawBody = JSON.stringify(req.body)
+    const hmac = crypto.createHmac("sha256", process.env.COINBASE_WEBHOOK_SECRET)
+    const digest = hmac.update(rawBody).digest("hex")
 
-    const event = JSON.parse(rawBody)
-    console.log('Webhook event:', event.type)
+    if (digest !== signature) return res.status(401).json({ error: "Invalid signature" })
 
-    const client = await clientPromise
-    const db = client.db('cryptoico')
+    const event = req.body
+    console.log("Webhook event:", event.type)
 
-    if (event.type === 'charge:confirmed') {
-      const data = event.data.metadata
-      const collection = data.type === 'ico_listing' ? 'icos' : 'banners'
-      await db.collection(collection).insertOne({ ...data, approved: false, createdAt: new Date(), endDate: data.duration ? new Date(Date.now() + data.duration*24*60*60*1000) : null })
+    await client.connect()
+    const db = client.db("cryptoico")
+
+    switch (event.type) {
+      case "charge:confirmed":
+        // Verifica se è ICO o Banner
+        if (event.data.metadata.type === "ico") {
+          await db.collection("icos").insertOne({
+            name: event.data.name,
+            website: event.data.description,
+            approved: true,
+            createdAt: new Date()
+          })
+          console.log("ICO approved")
+        } else if (event.data.metadata.type === "banner") {
+          await db.collection("banners").insertOne({
+            title: event.data.name,
+            url: event.data.description,
+            approved: true,
+            createdAt: new Date(),
+            endDate: new Date(Date.now() + 7*24*60*60*1000) // default 7 giorni
+          })
+          console.log("Banner approved")
+        }
+        break
+
+      case "charge:failed":
+        console.log("Payment failed:", event.data.metadata)
+        break
+
+      default:
+        console.log("Unhandled event:", event.type)
     }
 
     res.status(200).json({ received: true })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Internal server error' })
+  } catch (err) {
+    console.error("Webhook error:", err)
+    res.status(500).json({ error: "Internal server error" })
   }
 }
