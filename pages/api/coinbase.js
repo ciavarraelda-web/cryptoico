@@ -1,20 +1,19 @@
-const CoinbaseCommerce = require('coinbase-commerce-node')
-const Client = CoinbaseCommerce.Client
-const Charge = CoinbaseCommerce.resources.Charge
+import { Client, resources } from "coinbase-commerce-node"
 
-// Initialize client with API key
+const { Charge } = resources
+
 Client.init(process.env.COINBASE_API_KEY)
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" })
   }
 
   try {
     const { icoData, amount } = req.body
 
     if (!icoData || !amount) {
-      return res.status(400).json({ error: 'Missing required parameters' })
+      return res.status(400).json({ error: "Missing required parameters" })
     }
 
     const chargeData = {
@@ -22,20 +21,22 @@ export default async function handler(req, res) {
       description: `Payment for listing ${icoData.name} on CryptoICO`,
       local_price: {
         amount: amount.toString(),
-        currency: 'USD'
+        currency: "USD",
       },
-      pricing_type: 'fixed_price',
+      pricing_type: "fixed_price",
       metadata: {
-        ico_id: icoData._id || icoData.tempId,
-        type: 'ico_listing'
-      }
+        ...icoData,
+        type: "ico_listing",
+      },
+      redirect_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
     }
 
     const charge = await Charge.create(chargeData)
-    
+
     res.status(200).json(charge)
   } catch (error) {
-    console.error('API error:', error)
-    res.status(500).json({ error: 'Internal server error' })
+    console.error("API error:", error)
+    res.status(500).json({ error: "Internal server error" })
   }
 }
