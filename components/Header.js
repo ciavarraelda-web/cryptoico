@@ -7,12 +7,10 @@ export default function Header() {
   return (
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* LOGO */}
         <Link href="/" className="flex items-center">
           <img src="/logo.png" alt="CryptoICO Logo" className="h-12 w-auto" />
         </Link>
 
-        {/* NAVBAR DESKTOP */}
         <nav className="hidden md:flex space-x-6">
           <Link href="/" className="text-gray-700 hover:text-green-600">Home</Link>
           <Link href="/icos" className="text-gray-700 hover:text-green-600">ICO Listings</Link>
@@ -20,7 +18,6 @@ export default function Header() {
           <Link href="#" className="text-gray-700 hover:text-green-600">Contact</Link>
         </nav>
 
-        {/* MENU MOBILE */}
         <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/>
@@ -28,7 +25,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* MOBILE MENU DROPDOWN */}
       {isMenuOpen && (
         <div className="md:hidden bg-white py-2 px-4 shadow-lg">
           <Link href="/" className="block py-2 text-gray-700 hover:text-green-600">Home</Link>
