@@ -12,7 +12,7 @@ export default function Header() {
         <Link href="/" className="flex items-center">
           <img src="https://raw.githubusercontent.com/ciavarraelda-web/cryptoico/refs/heads/main/project-root/public/IMG_20250831_000609_873.jpg" src="CryptoICO Logo" className="h-12 w-auto" />
     
-            src="/logo.png"     // metti il file logo nella cartella /public
+  
             alt="CryptoICO Logo"
             className="h-12 w-auto" // altezza 48px, larghezza proporzionata
           />
